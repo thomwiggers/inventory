@@ -4,18 +4,40 @@ on: [push]
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade poetry
-        poetry install
-    - name: Run the Django build
-      run: poetry run ./manage.py test
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade poetry
+          poetry install --no-interaction
+
+      - name: Run the Django tests
+        run: poetry run ./manage.py test
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade poetry
+          poetry install --no-interaction
+
+      - name: Flake8
+        run: poetry run ./manage.py test
+
+
+# vim: set ft=yaml ts=2 sw=2 tw=0 et :

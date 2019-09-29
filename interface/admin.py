@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from interface import models
+
+admin.site.register(models.Brand)
+admin.site.register(models.Product)
+admin.site.register(models.Packaging)

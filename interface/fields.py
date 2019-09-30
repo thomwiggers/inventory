@@ -1,18 +1,21 @@
+from django import forms
 from django.db.models import fields
-from django.core.exceptions import ValidationError
-from django.utils.deconstruct import deconstructible
+
+
+from interface.validators import ean_validator
 
 import stdnum.ean
-import stdnum.exceptions
 
 
-@deconstructible
-def ean_validator(value):
-    """Validate EAN numbers"""
-    try:
-        stdnum.ean.validate(value)
-    except stdnum.exceptions.ValidationError as e:
-        raise ValidationError from e
+class EANFormField(forms.Field):
+    """Form field for EAN codes"""
+    def __init__(self, *args, **kwargs):
+        kwargs['validators'] = (
+            kwargs.get('validators', []) + [ean_validator])
+        super().__init__(*args, **kwargs)
+
+    def clean(self, value):
+        return super().clean(value)
 
 
 class EANField(fields.CharField):
@@ -31,7 +34,7 @@ class EANField(fields.CharField):
         kwargs['max_length'] = 13
         kwargs['min_length'] = 8
 
-        return super().formfield(kwargs)
+        return super().formfield(**kwargs)
 
     def to_python(self, value):
         return stdnum.ean.compact(value)

@@ -5,10 +5,13 @@ var App = {
         var self = this;
         Quagga.init(this.state, (err) => {
             if (err) {
-                return self.handleError();
+                return self.handleError(err);
             }
             Quagga.start();
         });
+    },
+    handleError: (err) => {
+        alert(err);
     },
     state: {
         inputStream: {
@@ -64,8 +67,11 @@ Quagga.onProcessed(function(result) {
 });
 
 Quagga.onDetected(function(result) {
+    Quagga.stop();
     var code = result.codeResult.code;
     console.log("Code: " + code);
+    document.querySelector('#id_ean').value = code;
+    document.querySelector("form").submit();
 
     if (App.lastResult !== code) {
         App.lastResult = code;
@@ -76,5 +82,4 @@ Quagga.onDetected(function(result) {
         $node.find("h4.code").html(code);
         $("#result_strip ul.thumbnails").prepend($node);
     }
-    Quagga.stop();
 });

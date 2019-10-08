@@ -1,10 +1,12 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from interface import views
 
 app_name = 'interface'
 
 urlpatterns = [
-    path('', views.ScannerView.as_view()),
-    path('add_brand/', views.AddBrandView.as_view()),
+    path('', views.ScannerView.as_view(), name='index'),
+    re_path(r'add_brand_ean/prefix/(?P<ean>\d{7})/',
+            views.AddBrandEANView.as_view(),
+            name='add_brand_ean'),
 ]

@@ -1,0 +1,14 @@
+{% load static %}
+<!doctype html>
+<html>
+    <head><title>add brand EAN</title></head>
+    <body>
+    <form method="post">
+        <table>
+            {% csrf_token %}
+            {{ form }}
+        </table>
+        <input type="submit" />
+    </form>
+    </body>
+</html>

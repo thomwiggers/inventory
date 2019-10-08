@@ -1,10 +1,12 @@
+from dal import autocomplete
+
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, CreateView
 
 from interface.forms import ProductScannerForm, BrandEANAddForm
-from interface.models import Brand, Product
+from interface.models import Brand, BrandEAN, Product
 
 
 class ScannerView(FormView):
@@ -27,17 +29,23 @@ class ScannerView(FormView):
         return HttpResponse(f"done: {product}")
 
 
-class AddBrandEANView(FormView):
+class AddBrandEANView(CreateView):
+    model = BrandEAN
     form_class = BrandEANAddForm
     success_url = reverse_lazy('interface:index')
-    template_name = 'interface/brand_form.html'
 
     def get_initial(self):
         initial = super().get_initial()
         if 'ean' in self.kwargs:
-            initial['ean_prefix'] = self.kwargs['ean']
+            initial['label'] = self.kwargs['ean']
         return initial
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+
+class BrandAutocompleteView(autocomplete.Select2QuerySetView):
+    create_field = 'name'
+
+    def get_queryset(self):
+        qs = Brand.objects.all()
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+        return qs

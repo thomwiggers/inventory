@@ -33,11 +33,10 @@ jobs:
           python-version: 3.7
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade poetry
-          poetry install --no-interaction
+          python -m pip install flake8
 
       - name: Flake8
-        run: poetry run ./manage.py test
+        run: flake8
 
 
 # vim: set ft=yaml ts=2 sw=2 tw=0 et :

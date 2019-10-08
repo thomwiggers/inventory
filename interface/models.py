@@ -17,7 +17,7 @@ class Brand(models.Model):
 
     @classmethod
     def by_ean(cls, ean):
-        return cls.objects.get(brandean__brand_label=ean[:7])
+        return cls.objects.get(brandean__label=ean[:7])
 
     def __str__(self):
         return self.name
@@ -36,7 +36,7 @@ class BrandEAN(models.Model):
         on_delete=models.CASCADE,
     )
 
-    brand_label = models.CharField(
+    label = models.CharField(
         max_length=7,
         help_text="First 7 numbers of the EAN, which indicate the brand",
         unique=True,

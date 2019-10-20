@@ -1,4 +1,5 @@
 from django.core import validators
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -17,6 +18,8 @@ class Brand(models.Model):
 
     @classmethod
     def by_ean(cls, ean):
+        if not isinstance(ean, str):
+            ean = str(ean)
         return cls.objects.get(brandean__label=ean[:7])
 
     def __str__(self):
@@ -68,14 +71,19 @@ class Product(models.Model):
     generic_product = models.ForeignKey(
         'GenericProduct',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
     )
+
+    #: count
+    count = models.PositiveIntegerField(default=0)
 
     @classmethod
     def by_ean(cls, ean):
         return cls.objects.get(packaging__label=ean)
 
     def __str__(self):
-        return f"{self.brand}: {self.name}"
+        return f"{self.brand} {self.name}"
 
 
 class Packaging(models.Model):
@@ -99,6 +107,7 @@ class Packaging(models.Model):
         validators=[
             validators.MinValueValidator(1),
         ],
+        help_text="Number of product per package (e.g. sixpack).",
     )
 
     #: description
@@ -120,6 +129,23 @@ class Packaging(models.Model):
         if self.description:
             label += f" ({self.description})"
         return label
+
+    def clean(self):
+        try:
+            brand = Brand.by_ean(self.label)
+        except brand.DoesNotExist as e:
+            raise ValidationError({
+                'label': 'No brand for EAN found, create it first.',
+            }) from e
+        if self.product.brand != brand:
+            msg = (f"This EAN is associated with brand '{brand}', not with "
+                   f"product's brand '{self.product.brand}'")
+            raise ValidationError({
+                'product': msg,
+                'label': msg,
+            })
+
+        return super().clean()
 
 
 class GenericProduct(models.Model):

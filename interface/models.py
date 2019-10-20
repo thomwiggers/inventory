@@ -15,34 +15,23 @@ class Brand(models.Model):
         unique=True,
     )
 
+    @staticmethod
+    def get_brand_identifier(ean):
+        return ean[:7]
+
     @classmethod
     def by_ean(cls, ean):
         if not isinstance(ean, str):
             ean = str(ean)
-        return cls.objects.get(brandean__label=ean[:7])
+
+        pk = (cls.objects.all().filter(
+                  product__packaging__label__startswith=(
+                    cls.get_brand_identifier(ean)))
+              .values_list('pk').distinct()).get()
+        return cls.objects.get(pk=pk)
 
     def __str__(self):
         return self.name
-
-
-class BrandEAN(models.Model):
-    """
-    EAN brand associations
-
-    EAN numbers have an indication for the brand name.
-    We record this for easier classification.
-    """
-
-    brand = models.ForeignKey(
-        'Brand',
-        on_delete=models.CASCADE,
-    )
-
-    label = models.CharField(
-        max_length=7,
-        help_text="First 7 numbers of the EAN, which indicate the brand",
-        unique=True,
-    )
 
 
 class Product(models.Model):
@@ -83,6 +72,22 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.brand} {self.name}"
+
+    def clean(self):
+        for item in self.packaging_set.all():
+            try:
+                brand = Brand.by_ean(item.label)
+            except Brand.MultipleObjectsReturned as e:
+                raise ValidationError({
+                    'brand':
+                    "More than one brand associated with this EAN?",
+                }) from e
+            if self.brand != brand:
+                raise ValidationError({
+                    'brand':
+                    f"{brand} is already associated with this EAN",
+                })
+        return super().clean()
 
 
 class Packaging(models.Model):
@@ -132,10 +137,14 @@ class Packaging(models.Model):
     def clean(self):
         try:
             brand = Brand.by_ean(self.label)
-        except brand.DoesNotExist as e:
+        except Brand.DoesNotExist:
+            brand = self.product.brand
+        except Brand.MultipleObjectsReturned as e:
             raise ValidationError({
-                'label': 'No brand for EAN found, create it first.',
+                'label':
+                'This EAN is associated with more than 1 product!',
             }) from e
+
         if self.product.brand != brand:
             msg = (f"This EAN is associated with brand '{brand}', not with "
                    f"product's brand '{self.product.brand}'")

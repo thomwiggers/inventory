@@ -6,9 +6,6 @@ app_name = 'interface'
 
 urlpatterns = [
     path('', views.ScannerView.as_view(), name='index'),
-    path('add_brand_ean/prefix/<str:ean>/',
-         views.AddBrandEANView.as_view(),
-         name='add_brand_ean'),
     path('select_product_for_packaging/ean/<str:ean>/',
          views.SelectProductView.as_view(
              success_target='interface:add_packaging'),

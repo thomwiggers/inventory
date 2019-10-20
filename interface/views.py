@@ -10,8 +10,7 @@ from django.views import View
 from django.views.generic.edit import CreateView, FormView
 
 from interface import forms
-from interface.models import (Brand, BrandEAN, GenericProduct, Packaging,
-                              Product)
+from interface.models import Brand, GenericProduct, Packaging, Product
 
 
 class ScannedItemView(LoginRequiredMixin, View):
@@ -47,33 +46,12 @@ class ScannerView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         ean = form.cleaned_data['ean']
-
-        try:
-            Brand.by_ean(ean)
-        except Brand.DoesNotExist:
-            return redirect('interface:add_brand_ean', ean=ean)
-
         try:
             Product.by_ean(ean)
         except Product.DoesNotExist:
             return redirect('interface:select_product_for_packaging', ean=ean)
 
         return redirect('interface:scanned_item', ean=ean)
-
-
-class AddBrandEANView(LoginRequiredMixin, CreateView):
-    model = BrandEAN
-    form_class = forms.BrandEANAddForm
-
-    def get_success_url(self):
-        return reverse('interface:select_product_for_packaging',
-                       kwargs={'ean': self.kwargs.get('ean')})
-
-    def get_initial(self):
-        initial = super().get_initial()
-        if 'ean' in self.kwargs:
-            initial['label'] = str(self.kwargs['ean'] // 10**6)
-        return initial
 
 
 class CreatePackagingView(LoginRequiredMixin, CreateView):
@@ -87,8 +65,8 @@ class CreatePackagingView(LoginRequiredMixin, CreateView):
         form.fields['product'].disabled = True
         return form
 
-    def get_context_data(self):
-        context = super().get_context_data()
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
         context['product'] = get_object_or_404(Product,
                                                pk=self.kwargs['product'])
         return context
@@ -105,8 +83,11 @@ class SelectProductView(LoginRequiredMixin, View):
     success_target = ''
 
     def get(self, request, ean):
-        brand = Brand.by_ean(ean)
-        select_product_form = forms.SelectProductForm(brand=brand)
+        try:
+            brand = Brand.by_ean(ean)
+            select_product_form = forms.SelectProductForm(brand=brand)
+        except Brand.DoesNotExist:
+            select_product_form = None
         product_form = forms.ProductForm(initial={'brand': brand})
 
         return render(
@@ -116,17 +97,20 @@ class SelectProductView(LoginRequiredMixin, View):
             })
 
     def post(self, request, ean):
-        brand = Brand.by_ean(ean)
         product_id = request.POST.get('product')
         if product_id:
-            product = get_object_or_404(Product, brand=brand, pk=product_id)
+            product = get_object_or_404(Product, pk=product_id)
         else:
+            try:
+                brand = Brand.by_ean(ean)
+                select_product_form = forms.SelectProductForm(brand=brand)
+            except Brand.DoesNotExist:
+                select_product_form = None
             product_form = forms.ProductForm(request.POST)
             if not product_form.is_valid():
                 return render(
                     request, self.template_name, {
-                        'select_product_form':
-                        forms.SelectProductForm(brand=brand),
+                        'select_product_form': select_product_form,
                         'product_form': product_form,
                     })
             product = product_form.save()

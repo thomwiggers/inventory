@@ -1,20 +1,20 @@
 from dal import autocomplete
-
-from django.core.exceptions import ValidationError
 from django.contrib import messages
-from django.urls import reverse_lazy, reverse
-from django.http import HttpResponseBadRequest
-from django.shortcuts import redirect, render, get_object_or_404
-from django.views import View
-from django.views.generic.edit import FormView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.http import HttpResponseBadRequest
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views import View
+from django.views.generic.edit import CreateView, FormView
 
 from interface import forms
-from interface.models import (
-    Brand, BrandEAN, Product, Packaging, GenericProduct)
+from interface.models import (Brand, BrandEAN, GenericProduct, Packaging,
+                              Product)
 
 
-class ScannedItemView(View):
+class ScannedItemView(LoginRequiredMixin, View):
     def get(self, request, ean):
         packaging = get_object_or_404(Packaging, label=ean)
 
@@ -38,11 +38,10 @@ class ScannedItemView(View):
         except ValidationError:
             messages.error(request, "We can't have negative counts!")
 
-        return redirect(
-            reverse('interface:scanned_item', kwargs={'ean': ean}))
+        return redirect(reverse('interface:scanned_item', kwargs={'ean': ean}))
 
 
-class ScannerView(FormView):
+class ScannerView(LoginRequiredMixin, FormView):
     form_class = forms.ProductScannerForm
     template_name = 'interface/index.html'
 
@@ -62,14 +61,13 @@ class ScannerView(FormView):
         return redirect('interface:scanned_item', ean=ean)
 
 
-class AddBrandEANView(CreateView):
+class AddBrandEANView(LoginRequiredMixin, CreateView):
     model = BrandEAN
     form_class = forms.BrandEANAddForm
 
     def get_success_url(self):
-        return reverse(
-            'interface:select_product_for_packaging',
-            kwargs={'ean': self.kwargs.get('ean')})
+        return reverse('interface:select_product_for_packaging',
+                       kwargs={'ean': self.kwargs.get('ean')})
 
     def get_initial(self):
         initial = super().get_initial()
@@ -78,7 +76,7 @@ class AddBrandEANView(CreateView):
         return initial
 
 
-class CreatePackagingView(CreateView):
+class CreatePackagingView(LoginRequiredMixin, CreateView):
     model = Packaging
     success_url = reverse_lazy('interface:index')
     fields = '__all__'
@@ -91,8 +89,8 @@ class CreatePackagingView(CreateView):
 
     def get_context_data(self):
         context = super().get_context_data()
-        context['product'] = get_object_or_404(
-            Product, pk=self.kwargs['product'])
+        context['product'] = get_object_or_404(Product,
+                                               pk=self.kwargs['product'])
         return context
 
     def get_initial(self):
@@ -102,7 +100,7 @@ class CreatePackagingView(CreateView):
         return initial
 
 
-class SelectProductView(View):
+class SelectProductView(LoginRequiredMixin, View):
     template_name = 'interface/select_product.html'
     success_target = ''
 
@@ -111,10 +109,11 @@ class SelectProductView(View):
         select_product_form = forms.SelectProductForm(brand=brand)
         product_form = forms.ProductForm(initial={'brand': brand})
 
-        return render(request, self.template_name, {
-            'select_product_form': select_product_form,
-            'product_form': product_form,
-        })
+        return render(
+            request, self.template_name, {
+                'select_product_form': select_product_form,
+                'product_form': product_form,
+            })
 
     def post(self, request, ean):
         brand = Brand.by_ean(ean)
@@ -124,11 +123,12 @@ class SelectProductView(View):
         else:
             product_form = forms.ProductForm(request.POST)
             if not product_form.is_valid():
-                return render(request, self.template_name, {
-                    'select_product_form':
+                return render(
+                    request, self.template_name, {
+                        'select_product_form':
                         forms.SelectProductForm(brand=brand),
-                    'product_form': product_form,
-                })
+                        'product_form': product_form,
+                    })
             product = product_form.save()
         return redirect(
             reverse(self.success_target,
@@ -138,7 +138,8 @@ class SelectProductView(View):
                     }))
 
 
-class BrandAutocompleteView(autocomplete.Select2QuerySetView):
+class BrandAutocompleteView(LoginRequiredMixin,
+                            autocomplete.Select2QuerySetView):
     create_field = 'name'
 
     def get_queryset(self):
@@ -148,7 +149,8 @@ class BrandAutocompleteView(autocomplete.Select2QuerySetView):
         return qs
 
 
-class ProductAutocompleteView(autocomplete.Select2QuerySetView):
+class ProductAutocompleteView(LoginRequiredMixin,
+                              autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Product.objects.all().order_by('name')
         brand = self.forwarded.get('brand')

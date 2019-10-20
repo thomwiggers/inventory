@@ -1,10 +1,8 @@
+import stdnum.ean
 from django import forms
 from django.db.models import fields
 
-
 from interface.validators import ean_validator
-
-import stdnum.ean
 
 
 class EANFormField(forms.Field):

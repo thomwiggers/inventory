@@ -1,5 +1,4 @@
 from dal import autocomplete, forward
-
 from django import forms
 
 from interface import models

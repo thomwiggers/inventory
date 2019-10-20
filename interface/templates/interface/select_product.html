@@ -1,0 +1,41 @@
+{% load static %}
+<!doctype html>
+<html>
+    <head><title>Select product</title></head>
+    <body>
+        <div id="select_product">
+            <h2>Select product for which to add this packaging</h2>
+            <form method="post" id="select_product_form" name="select_product_form">
+                <table>
+                    {% csrf_token %}
+                    {{ select_product_form }}
+                </table>
+            </form>
+            <a id="add_new" href="#">Or, add a new product.</a>
+        </div>
+        <div id="add_new_product" style="display: none">
+            <h2>Product form</h2>
+            <form method="post">
+                <table>
+                    {% csrf_token %}
+                    {{ product_form }}
+                </table>
+                <input type="submit" />
+            </form>
+        </div>
+    </body>
+    {{ select_product_form.media }}
+    {{ product_form.media }}
+
+    <script type="text/javascript">
+        add_new.onclick = () => {
+            select_product.style = "display: none;";
+            add_new_product.style = "display: block;";
+            return false;
+        };
+        $('#id_product').on('select2:select', (ev) => {
+        console.log("Selected ", ev.params.data);
+        select_product_form.submit();
+    });
+    </script>
+</html>

@@ -1,0 +1,34 @@
+{% load static %}
+<!doctype html>
+<html>
+    <head>
+        <title>Scanned item</title>
+    </head>
+    <body>
+        <h1>{{ product.brand.name }} {{ product.name }}</h1>
+        <p>You've scanned:</p>
+        <ul>
+            <li>{{ product.brand.name }} {{ product.name }}</li>
+            <li>Current inventory count: {{ product.count }}</li>
+            <li>{{ packaging.count }} in this package</li>
+            {% if product.generic_product %}
+            <li>Generiek: {{ product.generic_product.name }}</li>
+            <ul>
+                {% for alternative in product.generic_product.product_set.all %}
+                <li>{{ alternative }} - {{ alternative.count }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </ul>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add"/>
+            <input type="submit" value="Add {{ packaging.count }} to the inventory"/>
+        </form>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="subtract"/>
+            <input type="submit" value="Subtract {{ packaging.count }} from the inventory"/>
+        </form>
+    </body>
+</html>

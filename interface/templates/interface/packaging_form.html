@@ -1,0 +1,17 @@
+{% load static %}
+<!doctype html>
+<html>
+    <head><title>Add packaging for {{ product }}</title></head>
+    <body>
+        <h1>Add packaging for {{ product }}</h1>
+        <form method="post">
+            <table>
+                {% csrf_token %}
+                {{ form }}
+            </table>
+            <input type="submit" />
+        </form>
+    </body>
+    {{ form.media }}
+
+</html>

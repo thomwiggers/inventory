@@ -1,7 +1,7 @@
-from django.utils.deconstruct import deconstructible
-from django.core.exceptions import ValidationError
 import stdnum.ean
 import stdnum.exceptions
+from django.core.exceptions import ValidationError
+from django.utils.deconstruct import deconstructible
 
 
 @deconstructible

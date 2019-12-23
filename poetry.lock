@@ -1,14 +1,23 @@
 [[package]]
 category = "main"
+description = "ASGI specs, helper code, and adapters"
+name = "asgiref"
+optional = false
+python-versions = "*"
+version = "3.2.3"
+
+[[package]]
+category = "main"
 description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
 name = "django"
 optional = false
-python-versions = ">=3.5"
-version = "2.2.6"
+python-versions = ">=3.6"
+version = "3.0.1"
 
 [package.dependencies]
+asgiref = ">=3.2,<4.0"
 pytz = "*"
-sqlparse = "*"
+sqlparse = ">=0.2.2"
 
 [[package]]
 category = "main"
@@ -16,7 +25,10 @@ description = "Fresh autocompletes for Django"
 name = "django-autocomplete-light"
 optional = false
 python-versions = "*"
-version = "3.4.1"
+version = "3.5.0"
+
+[package.dependencies]
+six = "*"
 
 [[package]]
 category = "main"
@@ -24,7 +36,7 @@ description = "Python module to handle standardized numbers and codes"
 name = "python-stdnum"
 optional = false
 python-versions = "*"
-version = "1.11"
+version = "1.12"
 
 [[package]]
 category = "main"
@@ -36,6 +48,14 @@ version = "2019.3"
 
 [[package]]
 category = "main"
+description = "Python 2 and 3 compatibility utilities"
+name = "six"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*"
+version = "1.13.0"
+
+[[package]]
+category = "main"
 description = "Non-validating SQL parser"
 name = "sqlparse"
 optional = false
@@ -43,12 +63,14 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "0.3.0"
 
 [metadata]
-content-hash = "c81f784c5200be15deb574169dff48d18bf395949ee8efbf379f836cc58f415a"
+content-hash = "56f14122dee26ea2395ce4a084802051ffd60a48228c6ee4e4f386c482fc5433"
 python-versions = "^3.7"
 
 [metadata.hashes]
-django = ["4025317ca01f75fc79250ff7262a06d8ba97cd4f82e93394b2a0a6a4a925caeb", "a8ca1033acac9f33995eb2209a6bf18a4681c3e5269a878e9a7e0b7384ed1ca3"]
-django-autocomplete-light = ["29ce2626a11eab2333e5aa9f95166a6d4400f11b5a05e8f23fa77017b1a9089a"]
-python-stdnum = ["d5f0af1bee9ddd9a20b398b46ce062dbd4d41fcc9646940f2667256a44df3854", "f445ec32bf5246c90389204cabba465f494545371c29a83fa2d30e6c872a6763"]
+asgiref = ["7e06d934a7718bf3975acbf87780ba678957b87c7adc056f13b6215d610695a0", "ea448f92fc35a0ef4b1508f53a04c4670255a3f33d22a81c8fc9c872036adbe5"]
+django = ["315b11ea265dd15348d47f2cbb044ef71da2018f6e582fed875c889758e6f844", "b61295749be7e1c42467c55bcabdaee9fbe9496fdf9ed2e22cef44d9de2ff953"]
+django-autocomplete-light = ["4a32bce7bc3004f49eb36b377ad18bd6a291077904810f22a2b13a6c53215666"]
+python-stdnum = ["4c1347c414d7bdffb454924998f62c04d907a5c01faff0e35df659b0b52acba5", "bb58877dafc2e590dbfddc63fa04876ab2005c3f35c8356a2dd01f62a9bdc4d6"]
 pytz = ["1c557d7d0e871de1f5ccd5833f60fb2550652da6be2693c1e02300743d21500d", "b02c06db6cf09c12dd25137e563b31700d3b80fcc4ad23abb7a315f2789819be"]
+six = ["1f1b7d42e254082a9db6279deae68afb421ceba6158efa6131de7b3003ee93fd", "30f610279e8b2578cab6db20741130331735c781b56053c59c4076da27f06b66"]
 sqlparse = ["40afe6b8d4b1117e7dff5504d7a8ce07d9a1b15aeeade8a2d10f130a834f8177", "7c3dca29c022744e95b547e867cee89f4fce4373f3549ccd8797d8eb52cdb873"]

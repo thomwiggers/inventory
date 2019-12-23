@@ -7,9 +7,9 @@ license = "AGPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-django = "^2.2"
+django = "^3.0"
 python-stdnum = "^1.11"
-django-autocomplete-light = "^3.4"
+django-autocomplete-light = "^3.5"
 
 [tool.poetry.dev-dependencies]
 

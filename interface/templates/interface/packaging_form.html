@@ -1,8 +1,8 @@
+{% extends "base.html" %}
 {% load static %}
-<!doctype html>
-<html>
-    <head><title>Add packaging for {{ product }}</title></head>
-    <body>
+
+{% block title %}Add packaging for {{ product }} {% endblock %}
+{% block content %}
         <h1>Add packaging for {{ product }}</h1>
         <form method="post">
             <table>
@@ -11,7 +11,9 @@
             </table>
             <input type="submit" />
         </form>
-    </body>
-    {{ form.media }}
+{% endblock %}
 
-</html>
+{% block js_footer %}
+{{ block.super }}
+{{ form.media }}
+{% endblock %}

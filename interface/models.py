@@ -1,6 +1,7 @@
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 
 from interface.fields import EANField
 
@@ -69,6 +70,10 @@ class Product(models.Model):
     @classmethod
     def by_ean(cls, ean):
         return cls.objects.get(packaging__label=ean)
+
+    def get_absolute_url(self):
+        item = self.packaging_set.first()
+        return reverse('interface:packaging', kwargs={'ean': item.label})
 
     def __str__(self):
         return f"{self.brand} {self.name}"

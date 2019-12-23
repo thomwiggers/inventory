@@ -22,7 +22,7 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = models.Product
-        fields = '__all__'
+        exclude = ['count']
         widgets = {
             'brand': autocomplete.ModelSelect2(
                 url='interface:brand-autocomplete',

@@ -17,15 +17,15 @@ var App = {
         inputStream: {
             type: 'LiveStream',
             constraints: {
-                width: {min: 640},
-                height: {min: 480},
+                width: {min: 1000},
+                height: {min: 1000},
                 facingMode: "environment",
             },
             target: "#interactive",
         },
         locator: {
-            patchSize: 'medium',
-            halfSample: true,
+            patchSize: 'small',
+            halfSample: false,
         },
         numOfWorkers: 4,
         frequency: 30,

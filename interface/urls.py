@@ -10,12 +10,12 @@ urlpatterns = [
          views.SelectProductView.as_view(
              success_target='interface:add_packaging'),
          name='select_product_for_packaging'),
-    path('add_packaging/product/<int:product>/ean/<str:ean>/',
+    path('packaging/add/product/<int:product>/ean/<str:ean>/',
          views.CreatePackagingView.as_view(),
          name='add_packaging'),
-    path('scanned_item/ean/<str:ean>/',
-         views.ScannedItemView.as_view(),
-         name='scanned_item'),
+    path('packaging/ean/<str:ean>/',
+         views.PackagingView.as_view(),
+         name='packaging'),
 
     # Autocomplete forms
     path('autocomplete/brand_autocomplete',

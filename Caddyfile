@@ -1,0 +1,7 @@
+inventory.{$CADDY_HOSTNAME}
+
+proxy / http://localhost:8000
+
+tls {
+    dns cloudflare
+}

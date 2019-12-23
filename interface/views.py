@@ -13,11 +13,11 @@ from interface import forms
 from interface.models import Brand, GenericProduct, Packaging, Product
 
 
-class ScannedItemView(LoginRequiredMixin, View):
+class PackagingView(LoginRequiredMixin, View):
     def get(self, request, ean):
         packaging = get_object_or_404(Packaging, label=ean)
 
-        return render(request, 'interface/scanned_item.html', {
+        return render(request, 'interface/packaging_view.html', {
             'packaging': packaging,
             'product': packaging.product,
         })
@@ -37,7 +37,7 @@ class ScannedItemView(LoginRequiredMixin, View):
         except ValidationError:
             messages.error(request, "We can't have negative counts!")
 
-        return redirect(reverse('interface:scanned_item', kwargs={'ean': ean}))
+        return redirect(reverse('interface:packaging', kwargs={'ean': ean}))
 
 
 class ScannerView(LoginRequiredMixin, FormView):
@@ -51,7 +51,7 @@ class ScannerView(LoginRequiredMixin, FormView):
         except Product.DoesNotExist:
             return redirect('interface:select_product_for_packaging', ean=ean)
 
-        return redirect('interface:scanned_item', ean=ean)
+        return redirect('interface:product', ean=ean)
 
 
 class CreatePackagingView(LoginRequiredMixin, CreateView):

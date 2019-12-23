@@ -1,0 +1,15 @@
+{% load i18n static %} <!doctype html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    {% block js_head %}{% endblock %}
+    {% block css %}{% endblock %}
+</head>
+<body>
+<div id="container">
+{% block content %}{% endblock %}
+{% block js_footer %}{% endblock %}
+</div>
+</body>
+</html>

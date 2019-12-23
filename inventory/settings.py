@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     # Django-autocomplete-light
     'dal',
     'dal_select2',
+    # django-bootstrap4
+    'bootstrap4',
     # Django apps
     'django.contrib.admin',
     'django.contrib.auth',

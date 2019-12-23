@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@ericblade/quagga2": "^0.0.10"
+  }
+}

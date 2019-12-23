@@ -1,7 +1,7 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "app/base.html" %}
+{% load static bootstrap4 %}
 
-{% block title %}Scanner demo | {{ block.super }}{% endblock %}
+{% block title %}Scanner demo{% endblock %}
 
 {% block js_head %}
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -24,8 +24,11 @@
     </div>
     <form method="post">
         {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit" />
+        {% bootstrap_form form %}
+
+        {% buttons %}
+        {% bootstrap_button "Submit" button_type='submit' %}
+        {% endbuttons %}
     </form>
 {% endblock %}
 

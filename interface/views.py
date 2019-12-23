@@ -51,7 +51,7 @@ class ScannerView(LoginRequiredMixin, FormView):
         except Product.DoesNotExist:
             return redirect('interface:select_product_for_packaging', ean=ean)
 
-        return redirect('interface:product', ean=ean)
+        return redirect('interface:packaging', ean=ean)
 
 
 class CreatePackagingView(LoginRequiredMixin, CreateView):
@@ -88,6 +88,7 @@ class SelectProductView(LoginRequiredMixin, View):
             select_product_form = forms.SelectProductForm(brand=brand)
         except Brand.DoesNotExist:
             select_product_form = None
+            brand = None
         product_form = forms.ProductForm(initial={'brand': brand})
 
         return render(

@@ -11,15 +11,16 @@ var App = {
         });
     },
     handleError: (err) => {
-        alert(err);
+        console.log(err);
     },
     state: {
         inputStream: {
             type: 'LiveStream',
             constraints: {
-                width: {min: 1000},
-                height: {min: 1000},
+                width: {min: 800},
+                height: {min: 600},
                 facingMode: "environment",
+                aspectRatio: {min: 1, max: 2},
             },
             target: "#interactive",
         },

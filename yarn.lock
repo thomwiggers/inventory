@@ -9,7 +9,7 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
-"@ericblade/quagga2@^0.0.10":
+"@ericblade/quagga2@0.0.10":
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/@ericblade/quagga2/-/quagga2-0.0.10.tgz#d529b37b82913429f937af5f70697abfbf482ad2"
   integrity sha512-tgwMNPDiCaUGvC6CWi1auW5D4CAxV754kcWZZSq5IP2UDBCZpAjdHCqYJjRzj6XG2mew/urr0ud3F/PuY0XrTA==

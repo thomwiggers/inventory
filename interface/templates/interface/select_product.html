@@ -1,7 +1,7 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "app/base.html" %}
+{% load static bootstrap4 %}
 
-{% block title %}Select product | {{ block.super }}{% endblock %}
+{% block title %}Select product{% endblock %}
     <body>
 {% block content %}
 <div id="select_product" style="{% if not select_product_form %}display: none;{% endif %}">
@@ -9,7 +9,9 @@
     <form method="post" id="select_product_form" name="select_product_form">
         <table>
             {% csrf_token %}
-            {{ select_product_form }}
+            {% if select_product_form %}
+            {% bootstrap_form select_product_form %}
+            {% endif %}
         </table>
     </form>
     <a id="add_new" href="#">Or, add a new product.</a>
@@ -19,9 +21,11 @@
     <form method="post">
         <table>
             {% csrf_token %}
-            {{ product_form }}
+            {% bootstrap_form product_form %}
         </table>
-        <input type="submit" />
+        {% buttons %}
+        {% bootstrap_button "Submit" button_type="submit" %}
+        {% endbuttons %}
     </form>
 </div>
 {% endblock %}

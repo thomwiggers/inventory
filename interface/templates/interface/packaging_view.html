@@ -1,7 +1,7 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "app/base.html" %}
+{% load static bootstrap4 %}
 
-{% block title %}{{ product.name }} | {{ block.super }}{% endblock %}
+{% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
 <h1>{{ product.brand.name }} {{ product.name }}</h1>
@@ -20,15 +20,17 @@
     {% endif %}
 </ul>
 
-<form method="post">
+{% buttons %}
+<form method="post" style="display:inline">
     {% csrf_token %}
     <input type="hidden" name="action" value="add"/>
-    <input type="submit" value="Add {{ packaging.count }} to the inventory"/>
+    <input type="submit" class="btn btn-primary" value="Add {{ packaging.count }} to the inventory"/>
 </form>
 
-<form method="post">
+<form method="post" style="display:inline;">
     {% csrf_token %}
     <input type="hidden" name="action" value="subtract"/>
-    <input type="submit" value="Subtract {{ packaging.count }} from the inventory"/>
+    <input type="submit" class="btn btn-danger" value="Subtract {{ packaging.count }} from the inventory"/>
 </form>
+{% endbuttons %}
 {% endblock %}

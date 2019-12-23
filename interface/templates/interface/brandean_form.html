@@ -1,13 +1,18 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "app/base.html" %}
+{% load static bootstrap4 %}
+
 {% block title %}Add brand EAN{% endblock %}
+
 {% block content %}
 <form method="post">
     <table>
         {% csrf_token %}
-        {{ form }}
+        {% bootstrap_form form %}
     </table>
-    <input type="submit" />
+
+    {% buttons %}
+    {% bootstrap_button "Submit" button_type='submit' %}
+    {% endbuttons %}
 </form>
 {% endblock %}
 

@@ -10,10 +10,10 @@
     core-js "^2.6.5"
     regenerator-runtime "^0.13.2"
 
-"@ericblade/quagga2@0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@ericblade/quagga2/-/quagga2-0.0.13.tgz#364cae8266c0d2919375f4b1b9b69c1e851a89dd"
-  integrity sha512-3Yr5N7uIeEFhWL/wjckjVzMXznGo+c1sEmeJoYRHH4O8T1Ka9bwVYe9qboPwz/W05XDTD0SzEUw811pPPuqKKw==
+"@ericblade/quagga2@0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@ericblade/quagga2/-/quagga2-0.0.14.tgz#2eef7d74e8acbc6b54203177688a5dcb383da6cc"
+  integrity sha512-yIBvG1U7mzA2y2eMWhwi9GzVX6WqRkGJvJrp9+BB+krvVh6WZMMQWxRN7sP4BmmF9/clW6qS83wBHa8MW9jTkg==
   dependencies:
     "@babel/polyfill" "^7.7.0"
     get-pixels "^3.3.2"

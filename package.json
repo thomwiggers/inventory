@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@ericblade/quagga2": "1.2.6"
+    "@ericblade/quagga2": "1.3.1"
   }
 }
